@@ -12,16 +12,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_URL);
 
+// création du schéma
 const ProductSchema = new mongoose.Schema({
-    name: { type: String, required: true, maxlength: 255 },
-    priceHt: { type: Number, required: true },
-    creationDate: { type: Date, required: true, default: Date.now },
-    dateUpdate: { type: Date, required: false },
+  name: { type: String, required: true, maxlength: 255 },
+  priceHt: { type: Number, required: true },
+  creationDate: { type: Date, required: true, default: Date.now },
+  dateUpdate: { type: Date, required: false },
 });
 
+// création de l'entité Product
 let Product = mongoose.model("Product", ProductSchema);
 
+// méthode pour récupérer tous les produits
+app.get("/product", async (req, res) => {
+  const products = await Product.find();
+  res.json(products);
+});
 
 const listener = app.listen(process.env.PORT, () => {
-    console.log("Your app is listening on port " + listener.address().port);
-  });
+  console.log("Your app is listening on port " + listener.address().port);
+});
